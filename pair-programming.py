@@ -13,8 +13,13 @@ else:
     print("Error:", response.status_code, response.text)
 
 food_data = response.json()
-print(food_data)
-# food_data_df = pd.DataFrame.from_dict(food_data)
-# print(food_data_df)
-# print(food_data_df['calories'])
+food_data_df = pd.DataFrame.from_dict(food_data)
+
+row_num = len(food_data_df)
+total_calories = 0
+for i in range(row_num):
+    total_calories = total_calories + food_data_df['calories'][i]
+
+
+
 
