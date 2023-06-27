@@ -16,8 +16,8 @@ def hours_needed(food_name):
         engine = db.create_engine('sqlite:///food_data.db')
         food_data_df.to_sql('food_table', con=engine, if_exists='replace', index=False)
         with engine.connect() as connection:
-                query_result = connection.execute(db.text("SELECT * FROM food_table;")).fetchall()
-                food_db = pd.DataFrame(query_result)
+                result = connection.execute(db.text("SELECT * FROM food_table;")).fetchall()
+                food_db = pd.DataFrame(result)
                 print(food_db)
 
 #tesing
