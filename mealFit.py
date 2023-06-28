@@ -13,14 +13,16 @@ def retr_Food(user_Food):
                 print("Error:", response.status_code, response.text)
                 return False
 
-def to_FoodDatabase(food_data):                       
-        food_data_df = pd.DataFrame.from_dict(food_data)
-        engine = db.create_engine('sqlite:///food_data.db')
-        food_data_df.to_sql('food_table', con=engine, if_exists='replace', index=False)
-        with engine.connect() as connection:
-                query_result = connection.execute(db.text("SELECT * FROM food_table;")).fetchall()
-                food_db = pd.DataFrame(query_result)
-        return food_db
+def to_FoodDatabase(food_data):
+    food_data_df = pd.DataFrame.from_dict(food_data)
+    engine = db.create_engine('sqlite:///food_data.db')
+    food_data_df.to_sql('food_table', con=engine, if_exists='append', index=False)
+    with engine.connect() as connection:
+        query_result = connection.execute(db.text("SELECT * FROM food_table;")).fetchall()
+        food_db = pd.DataFrame(query_result)
+        
+    return food_db
+
 
 def main():
     user_Food = input("Enter a food name: ")
