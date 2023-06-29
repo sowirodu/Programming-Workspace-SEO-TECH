@@ -5,8 +5,10 @@ import sqlalchemy as db
 
 
 def retr_Food(user_Food):
-    ninja_url = 'https://api.api-ninjas.com/v1/nutrition?query={}'.format(user_Food)
-    response = rq.get(ninja_url, headers={'X-Api-Key': os.environ.get('API_KEY')})
+    url = 'https://api.api-ninjas.com/v1/nutrition?query={}'
+    ninja_url = url.format(user_Food)
+    header = {'X-Api-Key': os.environ.get('API_KEY')}
+    response = rq.get(ninja_url, headers=header)
     if response.status_code == 200:
         food_data = response.json()
         return food_data
@@ -16,8 +18,10 @@ def retr_Food(user_Food):
 
 
 def calories_per_hour(activity):
-    cal_url = 'https://api.api-ninjas.com/v1/caloriesburned?activity={}'.format(activity)
-    cal_response = rq.get(cal_url, headers={'X-Api-Key': os.environ.get('API_KEY')})
+    url = 'https://api.api-ninjas.com/v1/caloriesburned?activity={}'
+    cal_url = url.format(activity)
+    header = {'X-Api-Key': os.environ.get('API_KEY')}
+    cal_response = rq.get(cal_url, headers=header)
     if cal_response.status_code == 200:
         activity_data = cal_response.json()
         if activity_data:
@@ -31,19 +35,21 @@ def calories_per_hour(activity):
 
 
 def to_FoodDatabase(food_data):
+    qry = "SELECT * FROM food_tb;"
     food_data_df = pd.DataFrame.from_dict(food_data)
     engine = db.create_engine('sqlite:///food_data.db')
-    food_data_df.to_sql('food_table', con=engine, if_exists='append', index=False)
+    food_data_df.to_sql('food_tb', con=engine, if_exists='append', index=False)
     with engine.connect() as connection:
-        query_result = connection.execute(db.text("SELECT * FROM food_table;")).fetchall()
+        query_result = connection.execute(db.text(qry)).fetchall()
         food_db = pd.DataFrame(query_result)
     return food_db
 
 
 def query_FoodDatabase():
+    qry = "SELECT * FROM food_tb ORDER BY calories DESC;"
     engine = db.create_engine('sqlite:///food_data.db')
     with engine.connect() as connection:
-        query_result = connection.execute(db.text("SELECT * FROM food_table ORDER BY calories DESC;")).fetchall()
+        query_result = connection.execute(db.text(qry)).fetchall()
         food_db = pd.DataFrame(query_result)
     return food_db
 
