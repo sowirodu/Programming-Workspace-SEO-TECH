@@ -15,7 +15,3 @@ class TestFoodProject(unittest.TestCase):
     def test_calories_per_hour_invalid_response(self):
         cal_per_hour = calories_per_hour('unknown_activity')
         self.assertFalse(cal_per_hour)
-
-
-if __name__ == '__main__':
-    unittest.main()
