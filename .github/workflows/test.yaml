@@ -22,7 +22,7 @@ jobs:
           
       - name: Check code coverage                        #new from here down
         run: |
-          python3 -m .coverage run -m unittest unitTest.py
+          python3 -m .coverage run -m unittest unitTests.py
           python3 -m .coverage report
           python3 -m .coverage html
           
